@@ -1,55 +1,176 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Your PIN - AST Networks</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AST Networks - PIN Delivery</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .card {
+    background: white;
+    color: #333;
+    width: 90%;
+    max-width: 500px;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .logo {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    color: #16a34a;
+    margin-bottom: 20px;
+  }
+
+  #status {
+    font-size: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+  }
+
+  .pin-box {
+    background: #f3f4f6;
+    border: 2px dashed #2563eb;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 36px;
+    color: #2563eb;
+    letter-spacing: 5px;
+  }
+
+  .spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #2563eb;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 20px auto;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .footer {
+    margin-top: 30px;
+    color: #666;
+    font-size: 14px;
+  }
+
+  button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  button:hover {
+    background: #1d4ed8;
+  }
+</style>
 </head>
+
 <body>
-  <h1>Payment successful - AST Networks</h1>
-  <p id="status">Loading your PIN...</p>
 
-  <script>
-    // Get the Stripe Checkout session ID from the URL
-    const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session_id");
-    const statusEl = document.getElementById("status");
+<div class="card">
+  <div class="logo">🌐 AST Networks</div>
 
-    // Supabase Edge Function endpoint
-    const endpoint = "https://mtchkmgfwnhbsasaoslo.supabase.co/functions/v1/get-pin";
+  <h1>Payment Successful</h1>
 
-    let tries = 0;
-    const maxTries = 10;
+  <div id="content">
+    <div class="spinner"></div>
+    <p id="status">Retrieving your PIN...</p>
+  </div>
 
-    async function loadPin() {
-      try {
-        const res = await fetch(`${endpoint}?session_id=${encodeURIComponent(sessionId)}`);
-        const data = await res.json();
+  <div class="footer">
+    Thank you for your purchase.
+  </div>
+</div>
 
-        if (data.pin) {
-          statusEl.textContent = `Your PIN: ${data.pin}`;
-          return;
-        }
+<script>
+const params = new URLSearchParams(window.location.search);
+const sessionId = params.get("session_id");
 
-        if (data.status === "pending" && tries < maxTries) {
-          tries++;
-          statusEl.textContent = "Finalizing your PIN, please wait...";
-          setTimeout(loadPin, 1000);
-          return;
-        }
+const endpoint =
+  "https://mtchkmgfwnhbsasaoslo.supabase.co/functions/v1/get-pin";
 
-        statusEl.textContent =
-          "Your payment is complete, but the PIN is not ready yet. Please contact support if this persists.";
-      } catch (e) {
-        console.error(e);
-        statusEl.textContent = "Could not load your PIN.";
-      }
+const statusEl = document.getElementById("status");
+const content = document.getElementById("content");
+
+let tries = 0;
+const maxTries = 15;
+
+async function loadPin() {
+  try {
+    const res = await fetch(
+      `${endpoint}?session_id=${encodeURIComponent(sessionId)}`
+    );
+
+    const data = await res.json();
+
+    if (data.pin) {
+      content.innerHTML = `
+        <p>Your PIN is ready:</p>
+        <div class="pin-box">${data.pin}</div>
+        <button onclick="navigator.clipboard.writeText('${data.pin}')">
+          Copy PIN
+        </button>
+      `;
+      return;
     }
 
-    if (!sessionId) {
-      statusEl.textContent = "Missing session ID.";
-    } else {
-      loadPin();
+    if (data.status === "pending" && tries < maxTries) {
+      tries++;
+      statusEl.textContent =
+        "Finalizing your PIN, please wait...";
+      setTimeout(loadPin, 1500);
+      return;
     }
-  </script>
+
+    content.innerHTML = `
+      <p>⚠️ Payment completed but your PIN is not ready yet.</p>
+      <p>Please refresh this page in a few moments.</p>
+    `;
+  } catch (err) {
+    console.error(err);
+    content.innerHTML = `
+      <p>❌ Unable to retrieve your PIN.</p>
+      <button onclick="location.reload()">Refresh</button>
+    `;
+  }
+}
+
+if (!sessionId) {
+  content.innerHTML = `
+    <p>❌ Missing Session ID.</p>
+  `;
+} else {
+  loadPin();
+}
+</script>
+
 </body>
 </html>
