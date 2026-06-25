@@ -6,121 +6,208 @@
 <title>AST Networks - PIN Delivery</title>
 
 <style>
-  * {
-    box-sizing: border-box;
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at top left,
+      rgba(255,255,255,.12),
+      transparent 40%),
+    linear-gradient(135deg,#0033a0,#0d47ff);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.card{
+  background:#fff;
+  width:100%;
+  max-width:520px;
+  border-radius:25px;
+  padding:30px;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+
+.logo img{
+  width:80px;
+  margin-bottom:15px;
+}
+
+.logo h2{
+  margin:0;
+  color:#13274f;
+  font-size:28px;
+  letter-spacing:2px;
+}
+
+.check-icon{
+  width:70px;
+  height:70px;
+  border:3px solid #22c55e;
+  border-radius:50%;
+  margin:25px auto;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#22c55e;
+  font-size:36px;
+  font-weight:bold;
+}
+
+h1{
+  margin:0;
+  color:#16a34a;
+  font-size:32px;
+}
+
+.subtitle{
+  color:#64748b;
+  margin-top:15px;
+  line-height:1.5;
+  font-size:18px;
+}
+
+.pin-title{
+  margin-top:30px;
+  color:#13274f;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.pin-box{
+  margin-top:15px;
+  background:#f8fafc;
+  border:2px dashed #cbd5e1;
+  border-radius:15px;
+  padding:20px;
+  font-size:48px;
+  font-weight:bold;
+  color:#0052ff;
+  letter-spacing:8px;
+  word-break:break-all;
+}
+
+.buttons{
+  margin-top:25px;
+}
+
+button{
+  border:none;
+  border-radius:10px;
+  padding:14px 24px;
+  font-size:16px;
+  color:#fff;
+  cursor:pointer;
+  margin:5px;
+  min-width:160px;
+}
+
+.copy-btn{
+  background:#0052ff;
+}
+
+.print-btn{
+  background:#16a34a;
+}
+
+button:hover{
+  opacity:0.9;
+}
+
+.copy-message{
+  display:none;
+  margin-top:20px;
+  background:#ecfdf5;
+  border:1px solid #bbf7d0;
+  color:#15803d;
+  padding:14px;
+  border-radius:10px;
+  font-weight:bold;
+}
+
+.notice{
+  margin-top:25px;
+  color:#64748b;
+  font-size:15px;
+  line-height:1.6;
+}
+
+.footer{
+  margin-top:30px;
+  padding-top:20px;
+  border-top:1px solid #e2e8f0;
+  color:#64748b;
+  font-size:14px;
+}
+
+.spinner{
+  width:45px;
+  height:45px;
+  border:5px solid #f1f5f9;
+  border-top:5px solid #0052ff;
+  border-radius:50%;
+  margin:25px auto;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  100%{
+    transform:rotate(360deg);
+  }
+}
+
+/* Tablets and phones */
+@media (max-width:768px){
+
+  .card{
+    max-width:95%;
+    padding:25px 20px;
   }
 
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e3a8a);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+  .logo img{
+    width:70px;
   }
 
-  .card {
-    background: #ffffff;
-    width: 100%;
-    max-width: 500px;
-    border-radius: 20px;
-    padding: 40px;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.30);
+  .logo h2{
+    font-size:24px;
   }
 
-  .logo {
-    font-size: 34px;
-    margin-bottom: 15px;
+  h1{
+    font-size:28px;
   }
 
-  h1 {
-    color: #16a34a;
-    margin-bottom: 10px;
+  .subtitle{
+    font-size:16px;
   }
 
-  p {
-    color: #555;
+  .pin-title{
+    font-size:20px;
   }
 
-  .pin-box {
-    background: #f8fafc;
-    border: 3px dashed #2563eb;
-    border-radius: 15px;
-    padding: 20px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    font-size: 38px;
-    font-weight: bold;
-    color: #2563eb;
-    letter-spacing: 5px;
+  .pin-box{
+    font-size:36px;
+    letter-spacing:5px;
+    padding:18px;
   }
 
-  button {
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 5px;
+  button{
+    width:100%;
+    margin:8px 0;
+    min-width:auto;
   }
 
-  button:hover {
-    opacity: 0.9;
+  .footer,
+  .notice{
+    font-size:13px;
   }
-
-  .print-btn {
-    background: #16a34a;
-  }
-
-  .copy-message {
-    color: #16a34a;
-    font-weight: bold;
-    margin-top: 20px;
-    display: none;
-  }
-
-  .footer {
-    margin-top: 30px;
-    color: #777;
-    font-size: 14px;
-  }
-
-  .spinner {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #2563eb;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    margin: 25px auto;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .card {
-      padding: 30px 20px;
-    }
-
-    .pin-box {
-      font-size: 30px;
-      letter-spacing: 3px;
-    }
-
-    button {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-  }
+}
 </style>
 </head>
 
@@ -128,116 +215,160 @@
 
 <div class="card">
 
-  <div class="logo">🌐 AST Networks</div>
-
-  <h1>Payment Successful</h1>
+  <div class="logo">
+    <img src="ast-logo.png" alt="AST Networks Logo">
+    <h2>AST NETWORKS</h2>
+  </div>
 
   <div id="content">
+
+    <div class="check-icon">✓</div>
+
+    <h1>Payment Successful!</h1>
+
+    <div class="subtitle">
+      Thank you for your purchase.<br>
+      Retrieving your PIN...
+    </div>
+
     <div class="spinner"></div>
-    <p id="status">Retrieving your PIN...</p>
+
   </div>
 
   <div class="footer">
-    Thank you for your purchase.
+    🔒 Secure • Fast • Reliable
   </div>
 
 </div>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get("session_id");
+const params = new URLSearchParams(window.location.search);
+const sessionId = params.get("session_id");
 
-  // CHANGE THIS ONLY IF YOUR SUPABASE PROJECT CHANGES
-  const endpoint =
-    "https://mtchkmgfwnhbsasaoslo.supabase.co/functions/v1/get-pin";
+const endpoint =
+"https://mtchkmgfwnhbsasaoslo.supabase.co/functions/v1/get-pin";
 
-  const content = document.getElementById("content");
-  const statusEl = document.getElementById("status");
+let tries = 0;
+const maxTries = 15;
 
-  let tries = 0;
-  const maxTries = 15;
+const content = document.getElementById("content");
 
-  async function loadPin() {
-    try {
-      const res = await fetch(
-        `${endpoint}?session_id=${encodeURIComponent(sessionId)}`
-      );
+async function loadPin() {
+  try {
+    const res = await fetch(
+      `${endpoint}?session_id=${encodeURIComponent(sessionId)}`
+    );
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch PIN");
-      }
+    if (!res.ok) {
+      throw new Error("Failed to retrieve PIN");
+    }
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (data.pin) {
-        content.innerHTML = `
-          <p>Your PIN is ready:</p>
+    if (data.pin) {
 
-          <div class="pin-box">${data.pin}</div>
+      content.innerHTML = `
+        <div class="check-icon">✓</div>
 
-          <button id="copyBtn">
+        <h1>Payment Successful!</h1>
+
+        <div class="subtitle">
+          Thank you for your purchase.<br>
+          Your PIN is ready.
+        </div>
+
+        <div class="pin-title">
+          Your PIN
+        </div>
+
+        <div class="pin-box">
+          ${data.pin}
+        </div>
+
+        <div class="buttons">
+          <button class="copy-btn" id="copyBtn">
             📋 Copy PIN
           </button>
 
-          <button class="print-btn" onclick="window.print()">
+          <button class="print-btn"
+                  onclick="window.print()">
             🖨 Print
           </button>
+        </div>
 
-          <div id="copyMessage" class="copy-message">
-            ✅ PIN copied to clipboard!
-          </div>
+        <div class="copy-message"
+             id="copyMessage">
+          ✅ PIN copied to clipboard!
+        </div>
 
-          <p style="margin-top:25px;color:#666;">
-            Please save this PIN for your records.
-          </p>
-        `;
-
-        document
-          .getElementById("copyBtn")
-          .addEventListener("click", async () => {
-            try {
-              await navigator.clipboard.writeText(data.pin);
-              document.getElementById("copyMessage").style.display = "block";
-            } catch (err) {
-              alert("Unable to copy PIN. Please copy it manually.");
-            }
-          });
-
-        return;
-      }
-
-      if (data.status === "pending" && tries < maxTries) {
-        tries++;
-        statusEl.textContent =
-          "⏳ Finalizing your PIN, please wait...";
-        setTimeout(loadPin, 1500);
-        return;
-      }
-
-      content.innerHTML = `
-        <p>⚠️ Payment completed, but your PIN is not ready yet.</p>
-        <p>Please refresh this page in a few moments.</p>
+        <div class="notice">
+          🛡️ Please save this PIN for your records.<br>
+          You will need it for activation.
+        </div>
       `;
-    } catch (err) {
-      console.error(err);
 
-      content.innerHTML = `
-        <p>❌ Unable to retrieve your PIN.</p>
+      document.getElementById("copyBtn")
+        .addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(data.pin);
+            document.getElementById("copyMessage")
+              .style.display = "block";
+          } catch {
+            alert(
+              "Unable to copy PIN. Please copy it manually."
+            );
+          }
+        });
 
-        <button onclick="location.reload()">
-          Refresh Page
-        </button>
-      `;
+      return;
     }
-  }
 
-  if (!sessionId) {
+    if (data.status === "pending" &&
+        tries < maxTries) {
+      tries++;
+      setTimeout(loadPin, 1500);
+      return;
+    }
+
     content.innerHTML = `
-      <p>❌ Missing Session ID.</p>
+      <h1>PIN Not Ready</h1>
+      <div class="subtitle">
+        Payment completed successfully.<br>
+        Please refresh this page in a few moments.
+      </div>
     `;
-  } else {
-    loadPin();
+
+  } catch (err) {
+
+    console.error(err);
+
+    content.innerHTML = `
+      <h1>Error</h1>
+
+      <div class="subtitle">
+        Unable to retrieve your PIN.
+      </div>
+
+      <br>
+
+      <button class="copy-btn"
+              onclick="location.reload()">
+        Refresh Page
+      </button>
+    `;
   }
+}
+
+if (!sessionId) {
+  content.innerHTML = `
+    <h1>Missing Session ID</h1>
+    <div class="subtitle">
+      No session information was found.
+    </div>
+  `;
+} else {
+  loadPin();
+}
 </script>
 
 </body>
