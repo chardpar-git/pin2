@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AST Networks - PIN Delivery</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 <style>
 *{
   box-sizing:border-box;
@@ -20,7 +18,6 @@ body{
       rgba(255,255,255,.12),
       transparent 40%),
     linear-gradient(135deg,#0033a0,#0d47ff);
-
   min-height:100vh;
   display:flex;
   justify-content:center;
@@ -112,7 +109,7 @@ button{
   min-width:160px;
 }
 
-.save-btn{
+.copy-btn{
   background:#0052ff;
 }
 
@@ -124,7 +121,7 @@ button:hover{
   opacity:0.9;
 }
 
-.message{
+.copy-message{
   display:none;
   margin-top:20px;
   background:#ecfdf5;
@@ -166,6 +163,7 @@ button:hover{
   }
 }
 
+/* Tablets and phones */
 @media (max-width:768px){
 
   .card{
@@ -215,7 +213,7 @@ button:hover{
 
 <body>
 
-<div class="card" id="captureCard">
+<div class="card">
 
   <div class="logo">
     <img src="ast-logo.png" alt="AST Networks Logo">
@@ -238,13 +236,12 @@ button:hover{
   </div>
 
   <div class="footer">
-    Secure • Fast • Reliable
+    🔒 Secure • Fast • Reliable
   </div>
 
 </div>
 
 <script>
-
 const params = new URLSearchParams(window.location.search);
 const sessionId = params.get("session_id");
 
@@ -254,24 +251,21 @@ const endpoint =
 let tries = 0;
 const maxTries = 15;
 
-const content =
-document.getElementById("content");
+const content = document.getElementById("content");
 
-async function loadPin(){
-
-  try{
-
+async function loadPin() {
+  try {
     const res = await fetch(
       `${endpoint}?session_id=${encodeURIComponent(sessionId)}`
     );
 
-    if(!res.ok){
-      throw new Error("Unable to retrieve PIN");
+    if (!res.ok) {
+      throw new Error("Failed to retrieve PIN");
     }
 
     const data = await res.json();
 
-    if(data.pin){
+    if (data.pin) {
 
       content.innerHTML = `
         <div class="check-icon">✓</div>
@@ -292,93 +286,59 @@ async function loadPin(){
         </div>
 
         <div class="buttons">
-
-          <button class="save-btn" id="saveBtn">
-            📷 Save as Photo
+          <button class="copy-btn" id="copyBtn">
+            📋 Copy PIN
           </button>
 
           <button class="print-btn"
                   onclick="window.print()">
             🖨 Print
           </button>
-
         </div>
 
-        <div class="message" id="saveMessage">
-          ✅ PIN image saved successfully.
+        <div class="copy-message"
+             id="copyMessage">
+          ✅ PIN copied to clipboard!
         </div>
 
         <div class="notice">
-          Please save this image for your records.<br>
-          You will need this PIN for activation.
+          🛡️ Please save this PIN for your records.<br>
+          You will need it for activation.
         </div>
       `;
 
-      document.getElementById("saveBtn")
-      .addEventListener("click", async ()=>{
-
-        const buttons =
-        document.querySelector(".buttons");
-
-        buttons.style.display = "none";
-
-        const canvas =
-        await html2canvas(
-          document.getElementById("captureCard"),
-          {
-            scale:2,
-            useCORS:true
+      document.getElementById("copyBtn")
+        .addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(data.pin);
+            document.getElementById("copyMessage")
+              .style.display = "block";
+          } catch {
+            alert(
+              "Unable to copy PIN. Please copy it manually."
+            );
           }
-        );
-
-        buttons.style.display = "block";
-
-        const link =
-        document.createElement("a");
-
-        link.download =
-        `AST_PIN_${data.pin}.png`;
-
-        link.href =
-        canvas.toDataURL("image/png");
-
-        link.click();
-
-        document.getElementById("saveMessage")
-        .style.display = "block";
-      });
+        });
 
       return;
     }
 
-    if(data.status === "pending" &&
-       tries < maxTries){
-
+    if (data.status === "pending" &&
+        tries < maxTries) {
       tries++;
-
-      setTimeout(loadPin,1500);
-
+      setTimeout(loadPin, 1500);
       return;
     }
 
     content.innerHTML = `
       <h1>PIN Not Ready</h1>
-
       <div class="subtitle">
         Payment completed successfully.<br>
         Please refresh this page in a few moments.
       </div>
-
-      <br>
-
-      <button class="save-btn"
-              onclick="location.reload()">
-        Refresh Page
-      </button>
     `;
 
-  }
-  catch(err){
+  } catch (err) {
 
     console.error(err);
 
@@ -391,7 +351,7 @@ async function loadPin(){
 
       <br>
 
-      <button class="save-btn"
+      <button class="copy-btn"
               onclick="location.reload()">
         Refresh Page
       </button>
@@ -399,23 +359,16 @@ async function loadPin(){
   }
 }
 
-if(!sessionId){
-
+if (!sessionId) {
   content.innerHTML = `
     <h1>Missing Session ID</h1>
-
     <div class="subtitle">
       No session information was found.
     </div>
   `;
-
-}
-else{
-
+} else {
   loadPin();
-
 }
-
 </script>
 
 </body>
